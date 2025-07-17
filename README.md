@@ -753,7 +753,7 @@ xhtml2pdf==0.2.11
 1. **Clonar el repositorio**
 
 ```bash
-git clone [repositorio]
+git clone https://github.com/BRUMILO/Rutix
 cd Rutix
 ```
 
@@ -775,7 +775,7 @@ pip install -r requirements.txt
 ```bash
 # Crear base de datos MySQL
 mysql -u root -p
-CREATE DATABASE rutix;
+CREATE DATABASE Rutix_DB;
 ```
 
 5. **Configurar variables de entorno**
