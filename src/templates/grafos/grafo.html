@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Rutas - Ver Grafo{% endblock %}
+
+{% block head_extra %}
+
+  <link href="/static/styles/styles_grafos/grafo.css" rel="stylesheet" />
+
+{%endblock%}
+
+{% block content %}
+
+<div class="content">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Visualización del Grafo</h3>
+          </div>
+          <div class="grafo-container">
+            <img src="/static/img/grafo.png" alt="Imagen del grafo" class="img-fluid" style="max-height: 600px;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

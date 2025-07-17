@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Ruta - Rutix</title>
+    <link rel="stylesheet" href="../static/styles/styles_pdf/rutas.css">
+</head>
+<body>
+    <div class="header">
+        <h1>RUTIX - Sistema de Gestión de Rutas</h1>
+        <h2>Reporte de Ruta Calculada</h2>
+    </div>
+    
+    <div class="route-info">
+        <div class="route-section">
+            <h3>Información de la Ruta</h3>
+            <div class="route-details">
+                <div class="detail-item">
+                    <span class="detail-label">Ciudad de Origen:</span>
+                    <span class="detail-value origin">{{ origen }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Ciudad de Destino:</span>
+                    <span class="detail-value destination">{{ destino }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Fecha de Consulta:</span>
+                    <span class="detail-value">{{ fecha_generacion }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if resultado.camino %}
+    <div class="result-section">
+        <h3>Resultado del Cálculo</h3>
+        <div class="result-box {% if resultado.valido %}result-valid{% else %}result-invalid{% endif %}">
+            <div class="result-item">
+                <span class="result-label">Ruta Óptima:</span>
+                <span class="result-value route-path">{{ resultado.camino | join(" → ") }}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Costo Total:</span>
+                <span class="result-value cost">${{ resultado.costo }}</span>
+            </div>
+            <div class="result-item validation">
+                {% if resultado.valido %}
+                    <span class="validation-icon"></span>
+                    <span class="validation-text valid"> El camino incluye una ciudad costera</span>
+                {% else %}
+                    <span class="validation-icon"></span>
+                    <span class="validation-text invalid"> El camino NO pasa por ciudad costera</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% if imagen_base64 %}
+    <div class="graph-section">
+        <h3>Visualización del Grafo</h3>
+        <div class="graph-container">
+            <img src="data:image/png;base64,{{ imagen_base64 }}" alt="Grafo con camino resaltado" class="graph-image">
+        </div>
+        <p class="graph-caption">Grafo que muestra la ruta más económica resaltada</p>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="no-result-section">
+        <h3>Sin Resultado</h3>
+        <p class="no-result-message">No se encontró una ruta entre las ciudades seleccionadas.</p>
+    </div>
+    {% endif %}
+
+    <div class="footer">
+        <p>{{ fecha_generacion }} - Reporte de Ruta: {{ origen }} → {{ destino }}</p>
+    </div>
+</body>
+</html>

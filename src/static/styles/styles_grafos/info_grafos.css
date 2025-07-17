@@ -1,0 +1,9 @@
+.content-wrapper {
+  height: calc(100vh - 114px);
+  overflow-y: auto;
+}
+
+body, html {
+  overflow: hidden;
+  height: 100%;
+}

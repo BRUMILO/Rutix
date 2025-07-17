@@ -1,0 +1,17 @@
+.content-wrapper {
+  height: calc(100vh - 114px);
+  overflow-y: auto;
+}
+
+body, html {
+  overflow: hidden;
+  height: 100%;
+}
+
+.grafo-container {
+    max-width: 700px;
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}

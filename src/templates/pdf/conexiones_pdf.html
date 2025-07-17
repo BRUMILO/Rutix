@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Conexiones - Rutix</title>
+    <link rel="stylesheet" href="../static/styles/styles_pdf/conexiones.css">
+
+</head>
+<body>
+    <div class="header">
+        <h1>RUTIX - Sistema de Gestión de Rutas</h1>
+        <h2>Reporte de Conexiones Registradas</h2>
+    </div>
+    
+    <div class="info-section">
+        <div class="info-item">
+            <span class="info-label">Total de Rutas</span>
+            <span class="info-value total-count">{{ conexiones|length }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Fecha de Generación</span>
+            <span class="info-value">{{ fecha_generacion }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Costo Promedio</span>
+            <span class="info-value">
+                {% if conexiones|length > 0 %}
+                    ${{ "%.2f"|format((conexiones|map(attribute='2')|sum) / conexiones|length) }}
+                {% else %}
+                    $0.00
+                {% endif %}
+            </span>
+        </div>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 35%;">Ciudad Origen</th>
+                <th style="width: 35%;">Ciudad Destino</th>
+                <th style="width: 30%;">Costo/Distancia</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for conexion in conexiones %}
+            <tr>
+                <td>{{ conexion[0] }}</td>
+                <td>{{ conexion[1] }}</td>
+                <td>
+                    <span class="badge">${{ "%.2f"|format(conexion[2]) }}</span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    {% if conexiones|length > 0 %}
+    <div class="cost-summary">
+        <strong>Resumen de Costos:</strong><br>
+        Costo Total: ${{ "%.2f"|format(conexiones|map(attribute='2')|sum) }} | 
+        Costo Mínimo: ${{ "%.2f"|format(conexiones|map(attribute='2')|min) }} | 
+        Costo Máximo: ${{ "%.2f"|format(conexiones|map(attribute='2')|max) }}
+    </div>
+    {% endif %}
+    
+    <div class="footer">
+        <p>{{ fecha_generacion }} - Reporte de Conexiones</p>
+    </div>
+</body>
+</html>

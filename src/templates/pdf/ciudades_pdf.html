@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Ciudades - Rutix</title>
+    <link rel="stylesheet" href="../static/styles/styles_pdf/ciudades.css">
+
+</head>
+<body>
+    <div class="header">
+        <h1>RUTIX - Sistema de Gestión de Rutas</h1>
+        <h2>Reporte de Ciudades Registradas</h2>
+    </div>
+    
+    <div class="info-section">
+        <div class="info-item">
+            <span class="info-label">Total de Ciudades</span>
+            <span class="info-value total-count">{{ ciudades|length }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Fecha de Generación</span>
+            <span class="info-value">{{ fecha_generacion }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Ciudades Costeras</span>
+            <span class="info-value">{{ ciudades|selectattr('costera')|list|length }}</span>
+        </div>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                {% if current_user.is_authenticated and current_user.admin %}
+                <th style="width: 10%;">ID</th>
+                {% endif %}
+                <th style="width: 35%;">Nombre de Ciudad</th>
+                <th style="width: 35%;">Provincia</th>
+                <th style="width: 20%;">¿Costera?</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ciudad in ciudades %}
+            <tr>
+                {% if current_user.is_authenticated and current_user.admin %}
+                    <td>{{ ciudad.id }}</td>
+                {% endif %}
+                <td>{{ ciudad.nombre }}</td>
+                <td>{{ ciudad.provincia }}</td>
+                <td>
+                    {% if ciudad.costera %}
+                        <span class="badge badge-success">Sí</span>
+                    {% else %}
+                        <span class="badge badge-secondary">No</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="footer">
+        <p>{{ fecha_generacion }} - Reporte de Ciudades</p>
+    </div>
+</body>
+</html>

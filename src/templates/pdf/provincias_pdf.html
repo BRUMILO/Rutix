@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Provincias - Rutix</title>
+    <link rel="stylesheet" href="../static/styles/styles_pdf/provincias.css">
+
+</head>
+<body>
+    <div class="header">
+        <h1>RUTIX - Sistema de Gestión de Rutas</h1>
+        <h2>Reporte de Provincias Registradas</h2>
+    </div>
+    
+    <div class="info-section">
+        <div class="info-item">
+            <span class="info-label">Total de Provincias</span>
+            <span class="info-value total-count">{{ provincias|length }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Fecha de Generación</span>
+            <span class="info-value">{{ fecha_generacion }}</span>
+        </div>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                {% if current_user.is_authenticated and current_user.admin %}
+                    <th style="width: 20%;">ID</th>
+                {% endif %}
+                <th style="width: 80%;">Nombre de Provincia</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for provincia in provincias %}
+            <tr>
+                {% if current_user.is_authenticated and current_user.admin %}
+                    <td>{{ provincia.id }}</td>
+                {% endif %}
+                <td>{{ provincia.nombre }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="footer">
+        <p>{{ fecha_generacion }} - Reporte de Provincias</p>
+    </div>
+</body>
+</html>

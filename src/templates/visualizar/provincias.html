@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block title %}Provincias Agregadas{% endblock %}
+
+{% block head_extra %}
+
+   <link href="/static/styles/styles_tablas/provincias.css" rel="stylesheet" />
+   
+{%endblock%}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="info-box style-info-box">
+      <span class="info-box-icon bg-info elevation-1 style-info-box-icon">
+        <i class="fas fa-map-marked-alt style-info-box-text"></i>
+      </span>
+      <div class="info-box-content style-info-box-content">
+        <span class="info-box-text">Provincias</span>
+        <span class="info-box-number">{{ provincias|length }}</span>
+      </div>
+    </div>
+    <div class="btn-group">
+      <form method="post" action="{{ url_for('visualizar_provincias.visualizar_provincias') }}">
+        <button class="btn btn-danger" name="descargar_pdf" type="submit">
+          <i class="nav-item fas fa-file-pdf"></i> Descargar PDF
+        </button>
+      </form>
+      {% if current_user.is_authenticated and current_user.admin %}
+      <button class="btn btn-success ml-2" data-toggle="modal" data-target="#modalAgregarProvincia">
+        <i class="fas fa-plus mr-1"></i> Agregar
+      </button>
+    {% endif %}
+    </div>
+  </div>
+  <div class="card card-outline shadow">
+    <div class="card-header bg-dark d-flex justify-content-between align-items-center">
+      <h2 class="card-title mb-0 text-white">Provincias Registradas</h2>
+      <div class="input-group input-group-sm style-search">
+        <input type="text" id="buscadorProvincia" class="form-control" placeholder="Buscar provincia...">
+        <span class="input-group-text bg-dark text-white"><i class="fas fa-search"></i></span>
+      </div>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover mb-0" id="tablaProvincias">
+          <thead class="table-primary">
+            <tr>
+              {% if current_user.is_authenticated and current_user.admin %}
+              <th class="text-center align-middle">ID</th>
+              {% endif %}
+              <th class="text-center align-middle">Nombre</th>
+              {% if current_user.is_authenticated and current_user.admin %}
+              <th class="text-center align-middle">Acciones</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for provincia in provincias %}
+            <tr class="align-middle">
+              {% if current_user.is_authenticated and current_user.admin %}
+              <td class="text-center fw-bold">{{ provincia.id }}</td>
+              {% endif %}
+              <td class="text-center provincia-col">{{ provincia.nombre }}</td>
+              {% if current_user.is_authenticated and current_user.admin %}
+              <td class="text-center">
+                <a href="#" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalEditarProvincia" 
+                   data-id="{{ provincia.id }}" data-nombre="{{ provincia.nombre }}">
+                  <i class="fas fa-edit"></i>
+                </a>
+                <form method="post" style="display: inline;">
+                  <input type="hidden" name="eliminar_provincia" value="1">
+                  <input type="hidden" name="provincia_id" value="{{ provincia.id }}">
+                  <button type="submit" class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </form>
+              </td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Agregar Provincia -->
+<div class="modal fade" id="modalAgregarProvincia" tabindex="-1" aria-labelledby="modalAgregarProvinciaLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="modalAgregarProvinciaLabel">Agregar Nueva Provincia</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('visualizar_provincias.visualizar_provincias') }}" id="formAgregarProvincia">
+          <div class="form-group mb-3">
+            <label for="nombre_provincia">Nombre de la provincia</label>
+            <input type="text" class="form-control" id="nombre_provincia" name="nombre_provincia" placeholder="Ej: Pichincha" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="submit" form="formAgregarProvincia" class="btn btn-primary" name="agregar_provincia">Agregar Provincia</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Editar Provincia -->
+<div class="modal fade" id="modalEditarProvincia" tabindex="-1" aria-labelledby="modalEditarProvinciaLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title" id="modalEditarProvinciaLabel">Editar Provincia</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('visualizar_provincias.visualizar_provincias') }}" id="formEditarProvincia">
+          <input type="hidden" name="provincia_id" id="edit_provincia_id">
+          <div class="form-group mb-3">
+            <label for="nuevo_nombre_provincia">Nombre de la provincia</label>
+            <input type="text" class="form-control" id="nuevo_nombre_provincia" name="nuevo_nombre_provincia" placeholder="Ej: Pichincha" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="submit" form="formEditarProvincia" class="btn btn-warning" name="editar_provincia">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/scripts/scripts_tablas/provincias.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Seleccionar todos los formularios de eliminación
+    const deleteForms = document.querySelectorAll('form input[name="eliminar_provincia"]');
+
+    deleteForms.forEach(input => {
+      const form = input.closest('form');
+      if (form) {
+        form.addEventListener('submit', function (event) {
+          event.preventDefault(); // Prevenir el envío del formulario
+
+          Swal.fire({
+            title: '¿Está seguro?',
+            text: 'Esta acción no se puede deshacer.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              form.submit(); // Enviar el formulario si se confirma
+            }
+          });
+        });
+      }
+    });
+  });
+</script>
+{% endblock %}

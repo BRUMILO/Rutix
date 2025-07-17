@@ -1,0 +1,7 @@
+Flask
+matplotlib
+networkx
+Flask-SQLAlchemy
+python-dotenv
+PyMySQL
+xhtml2pdf

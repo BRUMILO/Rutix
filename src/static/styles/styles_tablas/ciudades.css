@@ -1,0 +1,40 @@
+.content-wrapper {
+  height: calc(100vh - 114px);
+  overflow-y: auto;
+}
+
+body, html {
+  overflow: hidden;
+  height: 100%;
+}
+
+.style-info-box {
+  width: 250px;
+  height: 90px;
+}
+
+.style-info-box-icon {
+  background-color: #17a2b8;
+  width: 60px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.style-info-box-icon i {
+  font-size: 2rem;
+}
+
+.style-info-box-content {
+  padding-left: 10px;
+}
+
+.style-info-box-text {
+  font-size: 1rem;
+}
+
+.style-search {
+  width: 30%; 
+  margin-left: auto;
+}

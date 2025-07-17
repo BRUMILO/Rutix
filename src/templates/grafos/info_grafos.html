@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Rutas - Info Grafo{% endblock %}
+
+{% block head_extra %}
+
+  <link href="/static/styles/styles_grafos/info_grafos.css" rel="stylesheet" />
+
+{%endblock%}
+
+{% block content %}
+
+<header class="bg-dark text-white py-3">
+    <div class="text-center">
+      <h1 class="mb-0">{% block header_title %}📘 Introducción a los Grafos{% endblock %}</h1>
+    </div>
+</header>
+
+<div class="container my-5">
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h4>¿Qué es un grafo?</h4>
+        <p>Un <strong>grafo</strong> es una estructura que representa relaciones entre objetos. Se compone de <strong>nodos</strong> (vértices) y <strong>aristas</strong> (enlaces).</p>
+      </div>
+    </div>
+
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h4>Componentes de un grafo</h4>
+        <ul>
+          <li><strong>Vértices (nodos):</strong> representan entidades (ciudades, personas, etc.).</li>
+          <li><strong>Aristas (edges):</strong> representan conexiones entre nodos. Pueden tener dirección y/o peso.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h4>Tipos de grafos</h4>
+        <table class="table table-bordered">
+          <thead class="thead-light">
+            <tr>
+              <th>Tipo</th>
+              <th>Descripción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Grafo dirigido</td><td>Las aristas tienen dirección (A → B).</td></tr>
+            <tr><td>Grafo no dirigido</td><td>Las aristas no tienen dirección (A — B).</td></tr>
+            <tr><td>Grafo ponderado</td><td>Las aristas tienen un valor (peso o costo).</td></tr>
+            <tr><td>Grafo no ponderado</td><td>Las aristas solo indican conexión.</td></tr>
+            <tr><td>Grafo conexo</td><td>Existe al menos un camino entre cualquier par de nodos.</td></tr>
+            <tr><td>Grafo no conexo</td><td>No todos los nodos están conectados.</td></tr>
+            <tr><td>Grafo cíclico</td><td>Contiene al menos un ciclo (camino cerrado).</td></tr>
+            <tr><td>Grafo acíclico</td><td>No contiene ciclos.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h4>Aplicaciones prácticas</h4>
+        <ul>
+          <li>Redes sociales</li>
+          <li>Mapas y GPS</li>
+          <li>Internet y telecomunicaciones</li>
+          <li>Dependencias en sistemas</li>
+          <li>Videojuegos e IA</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h4>Ejemplo sencillo</h4>
+        <p>Ciudades: A, B, C<br>
+           Rutas: A → B (20 km), B → C (15 km), A → C (40 km)<br>
+           Esto representa un <strong>grafo dirigido y ponderado</strong>.</p>
+      </div>
+    </div>
+
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h4>Representación en programación</h4>
+        <ul>
+          <li>Matriz de adyacencia</li>
+          <li>Lista de adyacencia</li>
+          <li>Diccionarios/mapas (ej: en Python)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <h4>Algoritmos comunes</h4>
+        <ul>
+          <li><strong>BFS</strong> (búsqueda en anchura)</li>
+          <li><strong>DFS</strong> (búsqueda en profundidad)</li>
+          <li><strong>Dijkstra</strong> (camino más corto)</li>
+          <li><strong>Floyd-Warshall</strong> (todos los caminos más cortos)</li>
+          <li><strong>Kruskal y Prim</strong> (árbol de expansión mínima)</li>
+        </ul>
+      </div>
+    </div>
+    </div>
+
+{% endblock %}

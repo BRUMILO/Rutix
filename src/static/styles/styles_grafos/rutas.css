@@ -1,0 +1,29 @@
+.content-wrapper {
+  height: calc(100vh - 114px);
+  overflow-y: auto;
+}
+
+body, html {
+  overflow: hidden;
+  height: 100%;
+}
+
+.alerta-positiva {
+    background-color: #2c9646; 
+    color: white;
+    border: none;
+    }
+
+.alerta-negativa {
+    background-color: #a03a44;
+    color: white;
+    border: none;
+    }
+
+.grafo-container {
+    max-width: 700px;
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}

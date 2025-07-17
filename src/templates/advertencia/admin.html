@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso restringido</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body style="background: #f8f9fa;">
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+  <div class="card shadow-lg border-danger" style="max-width: 400px;">
+    <div class="card-header bg-danger text-white text-center">
+      <h3 class="mb-0">Acceso restringido</h3>
+    </div>
+    <div class="card-body text-center">
+      <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
+      <p class="lead">Esta sección es solo para <b>administradores</b>.</p>
+      <a href="{{ url_for('home.dashboard') }}" class="btn btn-outline-danger mt-2">Volver al inicio</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

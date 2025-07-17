@@ -1,0 +1,88 @@
+
+.flash-messages-container {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    z-index: 9999;
+    max-width: 400px;
+    width: 100%;
+}
+
+.flash-alert {
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slideInRight 0.3s ease-out;
+    font-weight: 500;
+}
+
+.flash-alert.alert-success {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    border-left: 4px solid #155724;
+}
+
+.flash-alert.alert-danger {
+    background: linear-gradient(135deg, #dc3545, #e74c3c);
+    color: white;
+    border-left: 4px solid #721c24;
+}
+
+.flash-alert.alert-warning {
+    background: linear-gradient(135deg, #ffc107, #f39c12);
+    color: #212529;
+    border-left: 4px solid #856404;
+}
+
+.flash-alert.alert-info {
+    background: linear-gradient(135deg, #17a2b8, #3498db);
+    color: white;
+    border-left: 4px solid #0c5460;
+}
+
+.flash-alert .close {
+    color: inherit;
+    opacity: 0.8;
+    text-shadow: none;
+}
+
+.flash-alert .close:hover {
+    opacity: 1;
+}
+
+@keyframes slideInRight {
+    from {
+    transform: translateX(100%);
+    opacity: 0;
+    }
+    to {
+    transform: translateX(0);
+    opacity: 1;
+    }
+}
+
+/* Auto-hide animation */
+.flash-alert.fade-out {
+    animation: fadeOut 0.5s ease-out forwards;
+}
+
+@keyframes fadeOut {
+    from {
+    opacity: 1;
+    transform: translateX(0);
+    }
+    to {
+    opacity: 0;
+    transform: translateX(100%);
+    }
+}
+
+@media (max-width: 768px) {
+    .flash-messages-container {
+    top: 60px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+    }
+}

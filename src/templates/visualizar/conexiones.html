@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block title %}Conexiones Agregadas{% endblock %}
+
+{% block head_extra %}
+
+   <link href="/static/styles/styles_tablas/conexiones.css" rel="stylesheet" />
+
+{%endblock%}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="info-box style-info-box">
+      <span class="info-box-icon bg-success elevation-1 style-info-box-icon">
+        <i class="fas fa-route style-info-box-text"></i>
+      </span>
+      <div class="info-box-content style-info-box-content">
+        <span class="info-box-text">Rutas</span>
+        <span class="info-box-number">{{ conexiones|length }}</span>
+      </div>
+    </div>
+    <div class="btn-group">
+      <form method="post" action="{{ url_for('visualizar_conexiones.visualizar_conexiones') }}">
+        <button class="btn btn-danger" name="descargar_pdf" type="submit">
+          <i class="nav-item fas fa-file-pdf"></i> Descargar PDF
+        </button>
+      </form>
+      {% if current_user.is_authenticated and current_user.admin %}
+      <button class="btn btn-success ml-2" data-toggle="modal" data-target="#modalAgregarRuta">
+        <i class="fas fa-plus mr-1"></i> Agregar
+      </button>
+    {% endif %}
+    </div>
+  </div>
+  <div class="card card-outline shadow">
+    <div class="card-header bg-dark d-flex justify-content-between align-items-center">
+      <h2 class="card-title mb-0 text-white">Conexiones Registradas</h2>
+      <div class="input-group input-group-sm style-search">
+        <input type="text" id="buscadorConexion" class="form-control" placeholder="Buscar por ciudad...">
+        <span class="input-group-text bg-dark text-white"><i class="fas fa-search"></i></span>
+      </div>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover mb-0" id="tablaConexiones">
+          <thead class="table-primary">
+            <tr>
+              <th class="text-center align-middle">Ciudad Origen</th>
+              <th class="text-center align-middle">Ciudad Destino</th>
+              <th class="text-center align-middle">Costo</th>
+              {% if current_user.is_authenticated and current_user.admin %}
+              <th class="text-center align-middle">Acciones</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for conexion in conexiones %}
+            <tr class="align-middle">
+              <td class="text-center ciudad-origen-col">{{ conexion[0] }}</td>
+              <td class="text-center ciudad-destino-col">{{ conexion[1] }}</td>
+              <td class="text-center">
+                <span class="badge bg-info text-dark">{{ '%.2f'|format(conexion[2]) }} $</span>
+              </td>
+              {% if current_user.is_authenticated and current_user.admin %}
+              <td class="text-center">
+                <a href="#" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalEditarConexion" 
+                   data-id="{{ conexion[3] }}" data-origen-id="{{ conexion[4] }}" 
+                   data-destino-id="{{ conexion[5] }}" data-distancia="{{ conexion[2] }}">
+                  <i class="fas fa-edit"></i>
+                </a>
+                <form method="post" style="display: inline;">
+                  <input type="hidden" name="eliminar_conexion" value="1">
+                  <input type="hidden" name="conexion_id" value="{{ conexion[3] }}">
+                  <button type="submit" class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </form>
+              </td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Agregar Ruta -->
+<div class="modal fade" id="modalAgregarRuta" tabindex="-1" aria-labelledby="modalAgregarRutaLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="modalAgregarRutaLabel">Agregar Nueva Ruta</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('visualizar_conexiones.visualizar_conexiones') }}" id="formAgregarRuta">
+          <div class="form-group mb-3">
+            <label for="origen_id">Ciudad Origen</label>
+            <select class="form-control" id="origen_id" name="origen_id" required>
+              <option value="" disabled selected>Seleccione ciudad origen</option>
+              {% for ciudad in ciudades %}
+                <option value="{{ ciudad.id }}">{{ ciudad.nombre }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group mb-3">
+            <label for="destino_id">Ciudad Destino</label>
+            <select class="form-control" id="destino_id" name="destino_id" required>
+              <option value="" disabled selected>Seleccione ciudad destino</option>
+              {% for ciudad in ciudades %}
+                <option value="{{ ciudad.id }}">{{ ciudad.nombre }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group mb-3">
+            <label for="distancia">Costo/Distancia</label>
+            <input type="number" class="form-control" id="distancia" name="distancia" min="1" step="any" placeholder="Ej: 10" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="submit" form="formAgregarRuta" class="btn btn-primary" name="agregar_ruta">Agregar Ruta</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Editar Conexión -->
+<div class="modal fade" id="modalEditarConexion" tabindex="-1" aria-labelledby="modalEditarConexionLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title" id="modalEditarConexionLabel">Editar Conexión</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('visualizar_conexiones.visualizar_conexiones') }}" id="formEditarConexion">
+          <input type="hidden" name="conexion_id" id="edit_conexion_id">
+          <div class="form-group mb-3">
+            <label for="nuevo_origen_id">Ciudad Origen</label>
+            <select class="form-control" id="nuevo_origen_id" name="nuevo_origen_id" required>
+              <option value="" disabled>Seleccione ciudad origen</option>
+              {% for ciudad in ciudades %}
+                <option value="{{ ciudad.id }}">{{ ciudad.nombre }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group mb-3">
+            <label for="nuevo_destino_id">Ciudad Destino</label>
+            <select class="form-control" id="nuevo_destino_id" name="nuevo_destino_id" required>
+              <option value="" disabled>Seleccione ciudad destino</option>
+              {% for ciudad in ciudades %}
+                <option value="{{ ciudad.id }}">{{ ciudad.nombre }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group mb-3">
+            <label for="nueva_distancia">Costo/Distancia</label>
+            <input type="number" class="form-control" id="nueva_distancia" name="nueva_distancia" min="1" step="any" placeholder="Ej: 10" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="submit" form="formEditarConexion" class="btn btn-warning" name="editar_conexion">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/scripts/scripts_tablas/conexiones.js"> </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Seleccionar todos los formularios de eliminación
+    const deleteForms = document.querySelectorAll('form[method="post"] input[name="eliminar_conexion"]');
+
+    deleteForms.forEach(input => {
+      const form = input.closest('form');
+      if (form) {
+        form.addEventListener('submit', function (event) {
+          event.preventDefault(); // Prevenir el envío del formulario
+
+          Swal.fire({
+            title: '¿Está seguro?',
+            text: 'Esta acción no se puede deshacer.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              form.submit(); // Enviar el formulario si se confirma
+            }
+          });
+        });
+      }
+    });
+  });
+</script>
+{% endblock %}

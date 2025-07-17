@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+
+{% block title %}Ciudades Agregadas{% endblock %}
+
+{% block head_extra %}
+
+   <link href="/static/styles/styles_tablas/ciudades.css" rel="stylesheet" />
+   
+{%endblock%}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="info-box style-info-box">
+      <span class="info-box-icon bg-danger elevation-1 style-info-box-icon">
+        <i class="fas fa-city style-info-box-text"></i>
+      </span>
+      <div class="info-box-content style-info-box-content">
+        <span class="info-box-text">Ciudades</span>
+        <span class="info-box-number">{{ ciudades|length }}</span>
+      </div>
+    </div>
+    <div class="btn-group">
+      <form method="post" action="{{ url_for('visualizar_ciudades.visualizar_ciudades') }}">
+  <button class="btn btn-danger" name="descargar_pdf" type="submit">
+    <i class="nav-item fas fa-file-pdf"></i> Descargar PDF
+  </button>
+</form>
+      {% if current_user.is_authenticated and current_user.admin %}
+      <button class="btn btn-success ml-2" data-toggle="modal" data-target="#modalAgregarCiudad">
+        <i class="nav-item fas fa-plus mr-1"></i> Agregar
+      </button>
+      {% endif %}
+    </div>
+  </div>
+  <div class="card card-outline shadow">
+    <div class="card-header bg-dark d-flex justify-content-between align-items-center">
+      <h2 class="card-title mb-0 text-white">Ciudades Registradas</h2>
+      <div class="input-group input-group-sm style-search style-search">
+        <input type="text" id="buscadorProvincia" class="form-control" placeholder="Buscar por provincia...">
+        <span class="input-group-text bg-dark text-white"><i class="fas fa-search"></i></span>
+      </div>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover mb-0" id="tablaCiudades">
+          <thead class="table-primary">
+            <tr>
+              {% if current_user.is_authenticated and current_user.admin %}
+              <th class="text-center align-middle">ID</th>
+              {% endif %}
+              <th class="text-center align-middle">Nombre</th>
+              <th class="text-center align-middle">Provincia</th>
+              <th class="text-center align-middle">¿Costera?</th>
+              {% if current_user.is_authenticated and current_user.admin %}
+              <th class="text-center align-middle">Acciones</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for ciudad in ciudades %}
+            <tr class="align-middle">
+              {% if current_user.is_authenticated and current_user.admin %}
+              <td class="text-center fw-bold">{{ ciudad.id }}</td>
+              {% endif %}
+              <td class="text-center">{{ ciudad.nombre }}</td>
+              <td class="text-center provincia-col">{{ ciudad.provincia }}</td>
+              <td class="text-center">
+                {% if ciudad.costera %}
+                  <span class="badge bg-success">Sí</span>
+                {% else %}
+                  <span class="badge bg-secondary">No</span>
+                {% endif %}
+              </td>
+              {% if current_user.is_authenticated and current_user.admin %}
+              <td class="text-center">
+                <a href="#" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalEditarCiudad" 
+                   data-id="{{ ciudad.id }}" data-nombre="{{ ciudad.nombre }}" 
+                   data-provincia-id="{{ ciudad.provincia_id }}" 
+                   data-costera="{{ ciudad.costera }}">
+                  <i class="fas fa-edit"></i>
+                </a>
+                <form method="post" style="display: inline;">
+                  <input type="hidden" name="eliminar_ciudad" value="1">
+                  <input type="hidden" name="ciudad_id" value="{{ ciudad.id }}">
+                  <button type="submit" class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </form>
+              </td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Agregar Ciudad -->
+<div class="modal fade" id="modalAgregarCiudad" tabindex="-1" aria-labelledby="modalAgregarCiudadLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="modalAgregarCiudadLabel">Agregar Nueva Ciudad</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('visualizar_ciudades.visualizar_ciudades') }}" id="formAgregarCiudad">
+          <div class="form-group mb-3">
+            <label for="nombre_ciudad">Nombre de la ciudad</label>
+            <input type="text" class="form-control" id="nombre_ciudad" name="nombre_ciudad" placeholder="Ej: Quito" required>
+          </div>
+          <div class="form-group mb-3">
+            <label for="provincia_id">Provincia</label>
+            <select class="form-control" id="provincia_id" name="provincia_id" required>
+              <option value="" disabled selected>Seleccione una provincia</option>
+              {% for provincia in provincias %}
+                <option value="{{ provincia.id }}">{{ provincia.nombre }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group mb-3">
+            <label for="costera">¿Es ciudad costera?</label>
+            <select class="form-control" id="costera" name="costera" required>
+              <option value="0">No</option>
+              <option value="1">Sí</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="submit" form="formAgregarCiudad" class="btn btn-primary" name="agregar_ciudad">Agregar Ciudad</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Editar Ciudad -->
+<div class="modal fade" id="modalEditarCiudad" tabindex="-1" aria-labelledby="modalEditarCiudadLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title" id="modalEditarCiudadLabel">Editar Ciudad</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('visualizar_ciudades.visualizar_ciudades') }}" id="formEditarCiudad">
+          <input type="hidden" name="ciudad_id" id="edit_ciudad_id">
+          <div class="form-group mb-3">
+            <label for="nuevo_nombre_ciudad">Nombre de la ciudad</label>
+            <input type="text" class="form-control" id="nuevo_nombre_ciudad" name="nuevo_nombre_ciudad" placeholder="Ej: Quito" required>
+          </div>
+          <div class="form-group mb-3">
+            <label for="nueva_provincia_id">Provincia</label>
+            <select class="form-control" id="nueva_provincia_id" name="nueva_provincia_id" required>
+              <option value="" disabled>Seleccione una provincia</option>
+              {% for provincia in provincias %}
+                <option value="{{ provincia.id }}">{{ provincia.nombre }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group mb-3">
+            <label for="nueva_costera">¿Es ciudad costera?</label>
+            <select class="form-control" id="nueva_costera" name="nueva_costera" required>
+              <option value="0">No</option>
+              <option value="1">Sí</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="submit" form="formEditarCiudad" class="btn btn-warning" name="editar_ciudad">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/scripts/scripts_tablas/ciudades.js"> </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Seleccionar todos los formularios de eliminación
+    const deleteForms = document.querySelectorAll('form[method="post"] input[name="eliminar_ciudad"]');
+
+    deleteForms.forEach(input => {
+      const form = input.closest('form');
+      form.addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevenir el envío del formulario
+
+        Swal.fire({
+          title: '¿Está seguro?',
+          text: 'Esta acción no se puede deshacer.',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'Sí, eliminar',
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            form.submit(); // Enviar el formulario si se confirma
+          }
+        });
+      });
+    });
+  });
+</script>
+{% endblock %}

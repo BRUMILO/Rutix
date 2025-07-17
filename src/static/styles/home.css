@@ -1,0 +1,13 @@
+.content-wrapper {
+  height: calc(100vh - 114px);
+  overflow-y: auto;
+}
+
+body, html {
+  overflow: hidden;
+  height: 100%;
+}
+
+.info-box .info-box-text, .info-box .info-box-number {
+      color: black !important;
+}
